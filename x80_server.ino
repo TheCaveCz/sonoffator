@@ -23,7 +23,8 @@ void serverGetOutputRaw() {
 }
 
 void serverToggleOutput() {
-  outputToggle();
+  if (server.arg("n").toInt() == 1) outputNotify = true;
+  outputSet(!outputState);
   serverGetOutputRaw();
 }
 
@@ -33,8 +34,8 @@ void serverSetOutput() {
     return;
   }
 
-  long aInt = server.arg("o").toInt();
-  outputSet(aInt == 1);
+  if (server.arg("n").toInt() == 1) outputNotify = true;
+  outputSet(server.arg("o").toInt() == 1);
   serverGetOutputRaw();
 }
 

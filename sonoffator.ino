@@ -23,6 +23,8 @@
 #include <ArduinoOTA.h>
 #include <OneButton.h>
 #include <Ticker.h>
+#include <ESP8266HTTPClient.h>
+
 
 // This pin assignment works for Sonoff Basic and Sonoff S20/S26
 #define PIN_LED 13
@@ -33,6 +35,10 @@
 #define LOG_ENABLED 1
 
 #define WIFI_AP_NAME "sonoffator-"
+
+// This URL gets pinged whenever user clicks the button. Useful for https://github.com/Supereg/homebridge-http-notification-server
+// Uncomment to enable.
+//#define NOTIFICATION_URL "http://homebridge.server:8080/notificationID"
 
 String chipId = String(ESP.getChipId(), HEX);
 

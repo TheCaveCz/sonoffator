@@ -42,4 +42,6 @@ void loop() {
   } else {
     ledSetState(LED_TWO_BLINKS);
   }
+
+  outputHandleNotify();
 }

@@ -28,3 +28,20 @@ Use following settings in Arduino IDE
 * Connect USB-Serial to your PC (thus enabling ESP flash mode)
 * Upload code with Arduino IDE
 
+## Homebridge integration
+
+Use [homebridge-http-switch](https://github.com/Supereg/homebridge-http-switch) plugin.
+
+Sample config for this firmware:
+
+```
+"accessories": [
+    {
+        "accessory": "HTTP-SWITCH",
+        "name": "My Sonoff",
+        "statusUrl": "http://192.168.1.100/outputRaw",
+        "onUrl": "http://192.168.1.100/setOutput?o=1",
+        "offUrl": "http://192.168.1.100/setOutput?o=0"
+    }
+]
+```

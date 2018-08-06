@@ -7,14 +7,14 @@
 //
 // Dead simple firmware for Sonoff switches - just HTTP server, button handler and OTA. Suitable for HomeBridge integration
 //
-// Tested with ESP Arduino core 2.3.0
+// Tested with ESP Arduino cores 2.3.0 and 2.4.2
 //
 // Using WiFiManager and OneButton libraries
 //
 
 //
 // Flash with
-// Generic ESP8266 module, Flash mode DIO, Flash size 1M (64k SPIFFS), 80MHz CPU, 40MHz flash
+// Generic ESP8266 module, Flash mode DIO, Flash size 1M (no or 64k SPIFFS), 80MHz CPU, 40MHz flash
 //
 
 #include <ESP8266WiFi.h>

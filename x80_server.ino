@@ -14,6 +14,9 @@ void serverHandleRoot() {
 #if NOTIFICATION_ENABLED
   RESPONSE_ADD("notifyUrl", config.notifyUrl);
 #endif
+#if TEMP_ENABLED
+  RESPONSE_ADD("temp", tempCurrent);
+#endif
   RESPONSE_END(200, "text/plain");
 }
 
@@ -42,6 +45,21 @@ void serverSetOutput() {
   serverGetOutputRaw();
 }
 
+#if TEMP_ENABLED
+void serverGetTemp() {
+  String response = "{\"temperature\":";
+  response += tempCurrent;
+  response += "}\n";
+  server.send(200, "application/json", response);
+}
+
+void serverGetTempRaw() {
+  String response = "";
+  response += tempCurrent;
+  server.send(200, "text/plain", response);
+}
+#endif
+
 void serverSetup() {
   logInfo("Server setup");
 
@@ -50,6 +68,10 @@ void serverSetup() {
   server.on("/outputRaw", serverGetOutputRaw);
   server.on("/setOutput", serverSetOutput);
   server.on("/toggle", serverToggleOutput);
+#if TEMP_ENABLED
+  server.on("/temp", serverGetTemp);
+  server.on("/tempRaw", serverGetTempRaw);
+#endif
   server.begin();
 }
 

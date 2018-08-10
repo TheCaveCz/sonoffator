@@ -25,6 +25,8 @@
 #include <Ticker.h>
 #include <EEPROM.h>
 
+// uncomment this if you want to measure temperature with DS18B20
+//#define TEMP_ENABLED 1
 
 // uncomment this if you want to send notification to http endpoint when switch state changes
 //#define NOTIFICATION_ENABLED 1
@@ -38,6 +40,11 @@
 #define LOG_ENABLED 1
 
 #define WIFI_AP_NAME "sonoffator-"
+
+#if TEMP_ENABLED
+#include <OneWire.h>
+#define PIN_TEMP 14
+#endif
 
 #if NOTIFICATION_ENABLED
 #include <ESP8266HTTPClient.h>

@@ -27,12 +27,15 @@ void setup() {
   otaSetup(); // so we can OTA when config portal is up
   wifiSetup(); // will block on config portal if not configured
   serverSetup(); // HTTP server has to be setup after wifiSetup (because WiFiManager has its own HTTP server)
-  
+
   logInfo("Setup complete");
 }
 
 void loop() {
   outputButton.tick();
+#if TEMP_ENABLED
+  tempTick();
+#endif
   server.handleClient();
   ArduinoOTA.handle();
 

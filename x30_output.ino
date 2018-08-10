@@ -15,21 +15,30 @@ void outputSetup() {
   outputSet(false);
 }
 
-#ifdef NOTIFICATION_URL
+#if NOTIFICATION_ENABLED
 HTTPClient notifyHttp;
 
 void outputHandleNotify() {
   if (!outputNotify) return;
+  if (!WiFi.isConnected()) return;
+  if (strlen(config.notifyUrl) == 0) return;
 
-  if (WiFi.isConnected()) {
-    outputNotify = false;
-    notifyHttp.begin(NOTIFICATION_URL);
-    notifyHttp.POST(outputState ? "{\"characteristic\":\"On\",\"value\":true}" : "{\"characteristic\":\"On\",\"value\":false}");
-    notifyHttp.end();
-  }
-}
+  outputNotify = false;
+
+  String url = String(config.notifyUrl);
+#if NOTIFICATION_APPEND_STATE_TO_URL
+  url += outputState ? NOTIFICATION_APPEND_STATE_ON : NOTIFICATION_APPEND_STATE_OFF;
+#endif
+
+  logValue("Sending notify to ", url);
+
+  notifyHttp.begin(url);
+#if NOTIFICATION_USE_POST
+  notifyHttp.POST(outputState ? NOTIFICATION_POST_PAYLOAD_ON : NOTIFICATION_POST_PAYLOAD_OFF);
 #else
-void outputHandleNotify() {
+  notifyHttp.GET();
+#endif
+  notifyHttp.end();
 }
 #endif
 

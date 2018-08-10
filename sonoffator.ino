@@ -19,12 +19,15 @@
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
-#include <WiFiManager.h> 
+#include <WiFiManager.h>
 #include <ArduinoOTA.h>
 #include <OneButton.h>
 #include <Ticker.h>
-#include <ESP8266HTTPClient.h>
+#include <EEPROM.h>
 
+
+// uncomment this if you want to send notification to http endpoint when switch state changes
+//#define NOTIFICATION_ENABLED 1
 
 // This pin assignment works for Sonoff Basic and Sonoff S20/S26
 #define PIN_LED 13
@@ -36,9 +39,19 @@
 
 #define WIFI_AP_NAME "sonoffator-"
 
-// This URL gets pinged whenever user clicks the button. Useful for https://github.com/Supereg/homebridge-http-notification-server
-// Uncomment to enable.
-//#define NOTIFICATION_URL "http://homebridge.server:8080/notificationID"
+#if NOTIFICATION_ENABLED
+#include <ESP8266HTTPClient.h>
+
+#define NOTIFICATION_APPEND_STATE_TO_URL 0
+#define NOTIFICATION_APPEND_STATE_ON "true"
+#define NOTIFICATION_APPEND_STATE_OFF "false"
+
+#define NOTIFICATION_USE_POST 1
+#define NOTIFICATION_POST_PAYLOAD_ON "{\"characteristic\":\"On\",\"value\":true}"
+#define NOTIFICATION_POST_PAYLOAD_OFF "{\"characteristic\":\"On\",\"value\":false}"
+
+#endif
+
 
 String chipId = String(ESP.getChipId(), HEX);
 

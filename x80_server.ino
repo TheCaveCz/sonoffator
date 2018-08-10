@@ -11,6 +11,9 @@ void serverHandleRoot() {
   RESPONSE_ADD("mac", WiFi.macAddress());
   RESPONSE_ADD("uptime", millis() / 1000);
   RESPONSE_ADD("output", outputState ? '1' : '0');
+#if NOTIFICATION_ENABLED
+  RESPONSE_ADD("notifyUrl", config.notifyUrl);
+#endif
   RESPONSE_END(200, "text/plain");
 }
 
@@ -40,6 +43,8 @@ void serverSetOutput() {
 }
 
 void serverSetup() {
+  logInfo("Server setup");
+
   server.on("/", serverHandleRoot);
   server.on("/output", serverGetOutputJson);
   server.on("/outputRaw", serverGetOutputRaw);

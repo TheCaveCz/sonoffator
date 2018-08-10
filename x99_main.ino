@@ -23,9 +23,12 @@ void setup() {
   outputSetup();
   outputButton.attachLongPressStop(wifiReset);
 
+  configSetup();
+  otaSetup(); // so we can OTA when config portal is up
   wifiSetup(); // will block on config portal if not configured
   serverSetup(); // HTTP server has to be setup after wifiSetup (because WiFiManager has its own HTTP server)
-  otaSetup();
+  
+  logInfo("Setup complete");
 }
 
 void loop() {
@@ -43,5 +46,7 @@ void loop() {
     ledSetState(LED_TWO_BLINKS);
   }
 
+#if NOTIFICATION_ENABLED
   outputHandleNotify();
+#endif
 }

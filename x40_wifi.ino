@@ -20,6 +20,18 @@ void wifiSetup() {
     ledSetState(LED_SLOW_BLINK);
 
     WiFiManager wifiManager;
+    bool wifiShouldSaveConfig = false;
+
+    wifiManager.setSaveConfigCallback([&wifiShouldSaveConfig]() {
+      logInfo("Config should be saved");
+      wifiShouldSaveConfig = true;
+    });
+
+#if NOTIFICATION_ENABLED
+    WiFiManagerParameter notifyUrlParam("notifyUrl", "Notification URL", config.notifyUrl, 64);
+    wifiManager.addParameter(&notifyUrlParam);
+#endif
+
     String ap = WIFI_AP_NAME;
     ap += chipId;
     if (!wifiManager.startConfigPortal(ap.c_str())) {
@@ -28,6 +40,15 @@ void wifiSetup() {
       ESP.reset();
       while (1) delay(1);
     }
+
+#if NOTIFICATION_ENABLED
+    strcpy(config.notifyUrl, notifyUrlParam.getValue());
+#endif
+
+    if (wifiShouldSaveConfig) {
+      configWrite();
+    }
+
   } else if (!WiFi.isConnected()) { // calling WiFi.begin when already connected does all kind of weird stuff
     logValue("Stored SSID: ", WiFi.SSID());
     WiFi.begin();

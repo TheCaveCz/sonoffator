@@ -1,5 +1,6 @@
 
 WiFiEventHandler wifiIpHandler;
+bool wifiShouldSaveConfig;
 
 void wifiSetup() {
   if (WiFi.getAutoConnect()) WiFi.setAutoConnect(false);
@@ -20,9 +21,8 @@ void wifiSetup() {
     ledSetState(LED_SLOW_BLINK);
 
     WiFiManager wifiManager;
-    bool wifiShouldSaveConfig = false;
-
-    wifiManager.setSaveConfigCallback([&wifiShouldSaveConfig]() {
+    wifiShouldSaveConfig = false;
+    wifiManager.setSaveConfigCallback([]() {
       logInfo("Config should be saved");
       wifiShouldSaveConfig = true;
     });
@@ -61,4 +61,3 @@ void wifiReset() {
   ESP.reset();
   while (1) delay(1);
 }
-

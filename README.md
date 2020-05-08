@@ -1,6 +1,6 @@
 # sonoffator
 
-Dead simple firmware for Sonoff switches - just HTTP server, button handler and OTA. Suitable for HomeBridge integration.
+Dead simple firmware for Sonoff switches - just MQTT client, button handler and OTA. Suitable for HomeBridge integration.
 
 ## Compiling
 
@@ -9,6 +9,7 @@ You will need following to compile this sketch
 * [ESP8266 Arduino Core](https://github.com/esp8266/Arduino) - tested versions 2.3.0 and 2.4.2
 * [WiFiManager library](https://github.com/tzapu/WiFiManager)
 * [OneButton library](https://github.com/mathertel/OneButton)
+* [OneWire library](https://github.com/PaulStoffregen/OneWire) - only if you have DS18B20 connected
 
 Use following settings in Arduino IDE
 
@@ -17,6 +18,8 @@ Use following settings in Arduino IDE
 * Flash size: 1M (no or 64k SPIFFS)
 * CPU Frequency: 80MHz
 * Flash Frequency: 40MHz
+
+You need to adjust your MQTT server settings in the code.
 
 ## Flashing
 
@@ -30,18 +33,22 @@ Use following settings in Arduino IDE
 
 ## Homebridge integration
 
-Use [homebridge-http-switch](https://github.com/Supereg/homebridge-http-switch) plugin.
+Use [homebridge-mqttthing](https://github.com/arachnetech/homebridge-mqttthing) plugin.
 
-Sample config for this firmware:
+Sample config for this firmware (replace chipId in topics with your chip ID):
 
 ```
 "accessories": [
     {
-        "accessory": "HTTP-SWITCH",
-        "name": "My Sonoff",
-        "statusUrl": "http://192.168.1.100/outputRaw",
-        "onUrl": "http://192.168.1.100/setOutput?o=1",
-        "offUrl": "http://192.168.1.100/setOutput?o=0"
-    }
+        "accessory": "mqttthing",
+        "type": "switch",
+        "name": "Sonoffator",
+        "integerValue": true,
+        "topics": {
+            "getOnline": "hb/sonoffator-3b8a49/online",
+            "getOn": "hb/sonoffator-3b8a49/state",
+            "setOn": "hb/sonoffator-3b8a49/set"
+        }
+      }
 ]
 ```

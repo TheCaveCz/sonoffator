@@ -7,6 +7,7 @@ Dead simple firmware for Sonoff switches - just MQTT client, button handler and 
 You will need following to compile this sketch
 
 * [ESP8266 Arduino Core](https://github.com/esp8266/Arduino) - tested versions 2.3.0 and 2.4.2
+* [MQTT library](https://github.com/256dpi/arduino-mqtt)
 * [WiFiManager library](https://github.com/tzapu/WiFiManager)
 * [OneButton library](https://github.com/mathertel/OneButton)
 * [OneWire library](https://github.com/PaulStoffregen/OneWire) - only if you have DS18B20 connected

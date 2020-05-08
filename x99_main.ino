@@ -14,6 +14,20 @@ void otaSetup() {
   ArduinoOTA.begin();
 }
 
+void onConnectCb() {
+  mqttSubscribe(MQTT_TOPIC_SET);
+  outputSet(outputState); // send current switch state
+}
+
+void onMessageCb(const String& topic, const String& message) {
+  // assuming we are subscribed to only one topic
+  if (message == "0") {
+    outputSet(false);
+  } else if (message == "1") {
+    outputSet(true);
+  }
+}
+
 void setup() {
   Serial.begin(115200);
   logInfo("\n\nStarting Sonoffator");
@@ -23,33 +37,17 @@ void setup() {
   outputSetup();
   outputButton.attachLongPressStop(wifiReset);
 
-  configSetup();
   otaSetup(); // so we can OTA when config portal is up
   wifiSetup(); // will block on config portal if not configured
-  serverSetup(); // HTTP server has to be setup after wifiSetup (because WiFiManager has its own HTTP server)
+  mqttSetup();
+  mqttOnConnect = onConnectCb;
+  mqttOnMessage = onMessageCb;
 
   logInfo("Setup complete");
 }
 
 void loop() {
   outputButton.tick();
-#if TEMP_ENABLED
-  tempTick();
-#endif
-  server.handleClient();
+  scheduler.execute();
   ArduinoOTA.handle();
-
-  if (outputButton.isLongPressed()) {
-    ledSetState(LED_ON);
-  } else if (WiFi.isConnected()) {
-    ledSetState(LED_OFF);
-  } else if (millis() < 15000) {
-    ledSetState(LED_FAST_BLINK);
-  } else {
-    ledSetState(LED_TWO_BLINKS);
-  }
-
-#if NOTIFICATION_ENABLED
-  outputHandleNotify();
-#endif
 }

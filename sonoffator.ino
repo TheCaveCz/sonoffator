@@ -18,47 +18,47 @@
 //
 
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
 #include <WiFiManager.h>
 #include <ArduinoOTA.h>
 #include <OneButton.h>
 #include <Ticker.h>
-#include <EEPROM.h>
+#include <TaskScheduler.h>
+#include <MQTT.h>
+
+// MQTT credentials
+#define MQTT_HOST "192.168.85.1"
+#define MQTT_PORT 1883
+#define MQTT_USER ""
+#define MQTT_PASS ""
 
 // uncomment this if you want to measure temperature with DS18B20
 //#define TEMP_ENABLED 1
-
-// uncomment this if you want to send notification to http endpoint when switch state changes
-//#define NOTIFICATION_ENABLED 1
 
 // This pin assignment works for Sonoff Basic and Sonoff S20/S26
 #define PIN_LED 13
 #define PIN_BTN 0
 #define PIN_OUTPUT 12
+#define PIN_TEMP 14
 
 // Logging over Serial
 #define LOG_ENABLED 1
 
 #define WIFI_AP_NAME "sonoffator-"
 
-#if TEMP_ENABLED
-#include <OneWire.h>
-#define PIN_TEMP 14
-#endif
 
-#if NOTIFICATION_ENABLED
-#include <ESP8266HTTPClient.h>
+#define MQTT_CLIENT_ID "sonoffator-%s"
 
-#define NOTIFICATION_APPEND_STATE_TO_URL 0
-#define NOTIFICATION_APPEND_STATE_ON "true"
-#define NOTIFICATION_APPEND_STATE_OFF "false"
+#define MQTT_RECONNECT_INTERVAL 10000UL
 
-#define NOTIFICATION_USE_POST 1
-#define NOTIFICATION_POST_PAYLOAD_ON "{\"characteristic\":\"On\",\"value\":true}"
-#define NOTIFICATION_POST_PAYLOAD_OFF "{\"characteristic\":\"On\",\"value\":false}"
+#define MQTT_PREFIX "hb/sonoffator-%s/"
+#define MQTT_ONLINE_TOPIC "online"
+#define MQTT_IP_TOPIC "ip"
+#define MQTT_NAME_TOPIC "name"
 
-#endif
+#define MQTT_TOPIC_STATE "state"
+#define MQTT_TOPIC_SET "set"
+#define MQTT_TOPIC_TEMP "temp"
 
-
+Scheduler scheduler;
 String chipId = String(ESP.getChipId(), HEX);
 

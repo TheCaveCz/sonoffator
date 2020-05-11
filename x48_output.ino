@@ -10,18 +10,24 @@ void outputSetup() {
   outputButton.setPressTicks(5000);
   outputButton.attachClick(outputHandleButton);
 
-  outputSet(false);
+  outputSet(false, true);
 }
 
 void outputHandleButton() {
   outputSet(!outputState);
 }
 
-void outputSet(bool out) {
+void outputSet(bool out, bool ignore) {
+  if (ignore == false && out == outputState) return;
+  
   logValue("Output value: ", out);
   outputState = out;
   digitalWrite(PIN_OUTPUT, out);
 
   String s = outputState ? "1" : "0";
   mqttPublish(MQTT_TOPIC_STATE, s, true);
+}
+
+void outputSet(bool out) {
+  outputSet(out, false);
 }

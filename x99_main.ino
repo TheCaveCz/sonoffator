@@ -37,6 +37,9 @@ void setup() {
   outputSetup();
   outputButton.attachLongPressStop(wifiReset);
 
+#if TEMP_ENABLED
+  tempSetup();
+#endif
   otaSetup(); // so we can OTA when config portal is up
   wifiSetup(); // will block on config portal if not configured
   mqttSetup();

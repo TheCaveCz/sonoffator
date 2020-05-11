@@ -33,6 +33,8 @@
 
 // uncomment this if you want to measure temperature with DS18B20
 //#define TEMP_ENABLED 1
+#define TEMP_INTERVAL 60000UL
+#define TEMP_MAX_SENSORS 4
 
 // This pin assignment works for Sonoff Basic and Sonoff S20/S26
 #define PIN_LED 13

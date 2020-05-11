@@ -48,6 +48,9 @@
 #define PIN_TEMP 14
 #define PIN_ADC A0
 
+// uncomment if LED is on when pin is HIGH
+#define LED_ACTIVE_HIGH 1
+
 // Logging over Serial
 #define LOG_ENABLED 1
 

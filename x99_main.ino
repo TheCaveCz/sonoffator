@@ -40,6 +40,10 @@ void setup() {
 #if TEMP_ENABLED
   tempSetup();
 #endif
+#if ADC_ENABLED
+  adcSetup();
+#endif
+
   otaSetup(); // so we can OTA when config portal is up
   wifiSetup(); // will block on config portal if not configured
   mqttSetup();

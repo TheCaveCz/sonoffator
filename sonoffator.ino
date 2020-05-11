@@ -36,11 +36,17 @@
 #define TEMP_INTERVAL 60000UL
 #define TEMP_MAX_SENSORS 4
 
+
+// uncomment this if you want to measure analog values
+//#define ADC_ENABLED 1
+#define ADC_INTERVAL 60000UL
+
 // This pin assignment works for Sonoff Basic and Sonoff S20/S26
 #define PIN_LED 13
 #define PIN_BTN 0
 #define PIN_OUTPUT 12
 #define PIN_TEMP 14
+#define PIN_ADC A0
 
 // Logging over Serial
 #define LOG_ENABLED 1
@@ -60,7 +66,7 @@
 #define MQTT_TOPIC_STATE "state"
 #define MQTT_TOPIC_SET "set"
 #define MQTT_TOPIC_TEMP "temp"
+#define MQTT_TOPIC_ADC "adc/0"
 
 Scheduler scheduler;
 String chipId = String(ESP.getChipId(), HEX);
-

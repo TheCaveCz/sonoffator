@@ -68,22 +68,33 @@ bool tempRead(uint8_t id) {
   tempRecords[id].temp = (float)raw / 16.0;
   logValue("Got temp: ", tempRecords[id].temp);
 
-  char buffer[64];
-  sprintf(buffer, "%s/%02x%02x%02x%02x%02x%02x%02x%02x", MQTT_TOPIC_TEMP, tempRecords[id].addr[0], tempRecords[id].addr[1], tempRecords[id].addr[2], tempRecords[id].addr[3], tempRecords[id].addr[4], tempRecords[id].addr[5], tempRecords[id].addr[6], tempRecords[id].addr[7]);
-  mqttPublish(buffer, String(tempRecords[id].temp));
   return true;
 }
 
 void tempReadCb() {
   bool success = true;
   for (uint8_t i = 0; i < tempCount; i++) {
-    if (!tempRead(i)) {
+    if (tempRead(i)) {
+      tempSendValue(i);
+    } else {
       success = false;
     }
   }
 
   tempTask.setInterval(success ? (TEMP_INTERVAL - 1000UL) : 1000UL);
   tempTask.setCallback(&tempConvertCb);
+}
+
+void tempSendValue(uint8_t id) {
+  char buffer[64];
+  sprintf(buffer, "%s/%02x%02x%02x%02x%02x%02x%02x%02x", MQTT_TOPIC_TEMP, tempRecords[id].addr[0], tempRecords[id].addr[1], tempRecords[id].addr[2], tempRecords[id].addr[3], tempRecords[id].addr[4], tempRecords[id].addr[5], tempRecords[id].addr[6], tempRecords[id].addr[7]);
+  mqttPublish(buffer, String(tempRecords[id].temp));
+}
+
+void tempSendValues() {
+  for (uint8_t i = 0; i < tempCount; i++) {
+    tempSendValue(i);
+  }
 }
 
 #endif

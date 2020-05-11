@@ -16,7 +16,13 @@ void otaSetup() {
 
 void onConnectCb() {
   mqttSubscribe(MQTT_TOPIC_SET);
-  outputSet(outputState); // send current switch state
+  outputSet(outputState, true); // send current switch state
+#if TEMP_ENABLED
+  tempSendValues();
+#endif
+#if ADC_ENABLED
+  adcSendValues();
+#endif
 }
 
 void onMessageCb(const String& topic, const String& message) {

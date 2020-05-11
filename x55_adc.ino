@@ -10,6 +10,10 @@ void adcSetup() {
 void adcConvertCb() {
   adcCurrent = analogRead(PIN_ADC);
   logValue("Analog value: ", adcCurrent);
+  adcSendValues();
+}
+
+void adcSendValues() {
   mqttPublish(MQTT_TOPIC_ADC, String(adcCurrent));
 }
 

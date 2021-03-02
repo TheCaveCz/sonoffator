@@ -49,7 +49,10 @@
 #define PIN_ADC A0
 
 // uncomment if LED is on when pin is HIGH
-#define LED_ACTIVE_HIGH 1
+//#define LED_ACTIVE_HIGH 1
+
+// uncomment if you want to use timed switchoff
+//#define TIMER_ENABLED 1
 
 // Logging over Serial
 #define LOG_ENABLED 1
@@ -70,6 +73,8 @@
 #define MQTT_TOPIC_SET "set"
 #define MQTT_TOPIC_TEMP "temp"
 #define MQTT_TOPIC_ADC "adc/0"
+#define MQTT_TOPIC_TIMER "timer"
+#define MQTT_TOPIC_TIMER_REMAIN "timerRemaining"
 
 Scheduler scheduler;
 String chipId = String(ESP.getChipId(), HEX);

@@ -16,6 +16,9 @@ void otaSetup() {
 
 void onConnectCb() {
   mqttSubscribe(MQTT_TOPIC_SET);
+#if TIMER_ENABLED
+  mqttSubscribe(MQTT_TOPIC_TIMER);
+#endif
   outputSet(outputState, true); // send current switch state
 #if TEMP_ENABLED
   tempSendValues();
@@ -26,12 +29,18 @@ void onConnectCb() {
 }
 
 void onMessageCb(const String& topic, const String& message) {
-  // assuming we are subscribed to only one topic
-  if (message == "0") {
-    outputSet(false);
-  } else if (message == "1") {
-    outputSet(true);
+  if (topic.endsWith(MQTT_TOPIC_SET)) {
+    if (message == "0") {
+      outputSet(false);
+    } else if (message == "1") {
+      outputSet(true);
+    }
   }
+#if TIMER_ENABLED
+  else if (topic.endsWith(MQTT_TOPIC_TIMER)) {
+     outputSetTimer(message.toInt());
+  }
+#endif
 }
 
 void setup() {

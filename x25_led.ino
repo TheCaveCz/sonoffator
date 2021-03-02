@@ -18,12 +18,14 @@ uint8_t ledState;
 #endif
 
 void ledSetup() {
+#ifdef PIN_LED
   pinMode(PIN_LED, OUTPUT);
   digitalWrite(PIN_LED, HIGH);
 
   ledTickerProgress = 0;
   ledState = LED_OFF;
   ledTicker.attach(0.1, ledTick);
+#endif
 }
 
 void ledSetState(uint8_t l) {
@@ -34,6 +36,7 @@ void ledSetState(uint8_t l) {
 }
 
 void ledTick() {
+#ifdef PIN_LED
   switch (ledState) {
     case LED_ON: digitalWrite(PIN_LED, LED_LEVEL_ON); break;
     case LED_FAST_BLINK: digitalWrite(PIN_LED, ledTickerProgress % 2 ? LED_LEVEL_ON : LED_LEVEL_OFF); break;
@@ -43,4 +46,5 @@ void ledTick() {
   }
   ledTickerProgress++;
   if (ledTickerProgress >= 20) ledTickerProgress = 0;
+#endif
 }
